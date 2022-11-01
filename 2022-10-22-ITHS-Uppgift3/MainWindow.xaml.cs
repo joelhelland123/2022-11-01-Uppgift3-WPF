@@ -219,10 +219,7 @@ namespace _2022_10_22_ITHS_Uppgift3
                 {
                     sw.WriteLine(bokning.datum + " " + bokning.tider + " " + bokning.table + " " + bokning.name);
                 }
-                //for (int i = 0; i < bokningsBox.Items.Count; i++)
-                //{
-                //    sw.WriteLine(bokningsBox.Items[i].ToString());
-                //}
+                
                 sw.Close();
             }
         }
@@ -231,7 +228,7 @@ namespace _2022_10_22_ITHS_Uppgift3
             bokningsBox.Items.Clear();
             OpenFileDialog dlg = new OpenFileDialog();
 
-            dlg.Filter = "Text Files(.txt) | *.txt";
+            dlg.Filter = "Text Files(*.txt) | *.txt";
 
 
             var result1 = dlg.ShowDialog();
