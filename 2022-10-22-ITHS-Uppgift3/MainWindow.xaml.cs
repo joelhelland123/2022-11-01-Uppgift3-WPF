@@ -41,7 +41,7 @@ namespace _2022_10_22_ITHS_Uppgift3
             bokningar.Aggregate("", (values, nextvalue) => values += bokningsBox.Items.Add($"{bokningar.IndexOf(nextvalue) + 1}, {nextvalue.datum} {nextvalue.tider} {nextvalue.name} bord: {nextvalue.table}" + "\n"));
             DataContext = this;
             bokningsBox.Items.Clear();
-            
+
 
         }
 
@@ -79,7 +79,7 @@ namespace _2022_10_22_ITHS_Uppgift3
             bool tableAvailable = true;
             if (String.IsNullOrEmpty(datepick.Text.ToString()) || String.IsNullOrEmpty(tidCombo.Text.ToString()) || String.IsNullOrEmpty(nameBox.Text.ToString()) || String.IsNullOrEmpty(bordCombo.Text.ToString()))
             {
-                btn_boka.IsEnabled = false;
+
                 fieldMissing = true;
             }
 
@@ -100,7 +100,7 @@ namespace _2022_10_22_ITHS_Uppgift3
             }
             else
             {
-               
+
                 if (tableAvailable)
                 {
                     bokningar.Add(new Bokning(datepick.Text.ToString(), tidCombo.Text.ToString(), nameBox.Text.ToString(), Int32.Parse(bordCombo.Text)));
@@ -118,7 +118,7 @@ namespace _2022_10_22_ITHS_Uppgift3
                 }
             }
         }
-       
+
 
         public void avbokaBord()
         {
@@ -156,12 +156,18 @@ namespace _2022_10_22_ITHS_Uppgift3
             OpenFileDialog dlg = new OpenFileDialog();
 
             dlg.Filter = "Text Files(*.txt) | *.txt";
-
-
             var result1 = dlg.ShowDialog();
-            bokningsBox.Items.Add("Hämtar bokningar från fil...");
+            Loading.Content = "Laddar bokningar från fil...";
+            btn_boka.IsEnabled = false;
+            btn_readFile.IsEnabled = false;
+            btn_saveFile.IsEnabled = false;
+            btn_visaBokningar.IsEnabled = false;
             await Task.Delay(2000);
-            bokningsBox.Items.Clear();
+            btn_boka.IsEnabled = true;
+            btn_readFile.IsEnabled = true;
+            btn_saveFile.IsEnabled = true;
+            btn_visaBokningar.IsEnabled = true;
+            Loading.Content = "";
             if (result1 == true)
             {
                 var lines = File.ReadAllLines(dlg.FileName);
@@ -174,15 +180,31 @@ namespace _2022_10_22_ITHS_Uppgift3
         public async Task visaAllaBokningar()
         {
             bokningsBox.Items.Clear();
-            bokningsBox.Items.Add("Hämtar bokningar...");
+            Loading.Content = "Laddar bokningar...";
+            disableButtons();
+            
             await Task.Delay(2000);
-            bokningsBox.Items.Clear();
+            enableButtons();
+            
+            Loading.Content = "";
             bokningar.Aggregate("", (values, nextvalue) => values += bokningsBox.Items.Add
             ($"{bokningar.IndexOf(nextvalue) + 1}, {nextvalue.datum} {nextvalue.tider} {nextvalue.name}" +
             $" bord: {nextvalue.table}" + "\n"));
         }
-
-        
+        public void disableButtons()
+        {
+            btn_boka.IsEnabled = false;
+            btn_readFile.IsEnabled = false;
+            btn_saveFile.IsEnabled = false;
+            btn_visaBokningar.IsEnabled = false;
+        }
+        public void enableButtons()
+        {
+            btn_boka.IsEnabled = true;
+            btn_readFile.IsEnabled = true;
+            btn_saveFile.IsEnabled = true;
+            btn_visaBokningar.IsEnabled = true;
+        }
     }
 }
 
