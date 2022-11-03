@@ -40,115 +40,38 @@ namespace _2022_10_22_ITHS_Uppgift3
             bokningar.Add(new Bokning("2022-10-17", tider[1], "Joel", bord[2]));
             bokningar.Aggregate("", (values, nextvalue) => values += bokningsBox.Items.Add($"{bokningar.IndexOf(nextvalue) + 1}, {nextvalue.datum} {nextvalue.tider} {nextvalue.name} bord: {nextvalue.table}" + "\n"));
             DataContext = this;
+            bokningsBox.Items.Clear();
+            
 
         }
 
-        private void btn_visaBokningar_Click(object sender, RoutedEventArgs e)
+        private async void btn_visaBokningar_Click_1(object sender, RoutedEventArgs e)
         {
-            visaAllaBokningar();
-            //bokningsBox.Items.Clear();
-            //bokningar.Aggregate("", (values, nextvalue) => values += bokningsBox.Items.Add($"{bokningar.IndexOf(nextvalue) + 1}, {nextvalue.datum} {nextvalue.tider} {nextvalue.name} bord: {nextvalue.table}" + "\n"));
-
+            await visaAllaBokningar();
         }
 
         private void btn_boka_Click(object sender, RoutedEventArgs e)
         {
 
             bokaBord();
-            //    bool fieldMissing = false;
-            //    bool tableAvailable = true;
-            //    if (String.IsNullOrEmpty(datepick.Text.ToString()) || String.IsNullOrEmpty(tidCombo.Text.ToString()) || String.IsNullOrEmpty(nameBox.Text.ToString()) || String.IsNullOrEmpty(bordCombo.Text.ToString()))
-            //    {
-            //        fieldMissing = true;
-            //    }
-
-            //    foreach (var bokning in bokningar)
-            //    {
-
-            //        if (datepick.Text.ToString() == bokning.datum && tidCombo.Text.ToString() == bokning.tider && bordCombo.Text.ToString() == bokning.table.ToString())
-            //        {
-            //            tableAvailable = false;
-            //        }
-            //    }
-
-            //    if (fieldMissing)
-            //    {
-
-            //        MessageBox.Show("Du skrev inte in alla fält, gör ett nytt försök");
-
-            //    }
-            //    else
-            //    {
-            //        if (tableAvailable)
-            //        {
-            //            bokningar.Add(new Bokning(datepick.Text.ToString(), tidCombo.Text.ToString(), nameBox.Text.ToString(), Int32.Parse(bordCombo.Text)));
-            //            MessageBox.Show("Ditt bort är bokat");
-            //            datepick.Text = "";
-            //            tidCombo.Text = "";
-            //            bordCombo.Text = "";
-            //            nameBox.Text = "";
-            //            bokningsBox.Items.Clear();
-            //        }
-            //        else
-            //        {
-            //            MessageBox.Show("Tiden är redan upptagen försök att göra en ny bokning på en annan tid");
-            //            bokningsBox.Items.Clear();
-            //        }
-            //    }
         }
 
         private void btn_avboka_Click(object sender, RoutedEventArgs e)
         {
             avbokaBord();
-            //if (bokningsBox.Items.Count > 0)
-            //{
-            //    int val = bokningsBox.SelectedIndex;
-            //    bokningar.RemoveAt(val);
-            //    bokningsBox.Items.RemoveAt(bokningsBox.SelectedIndex);
-            //}
-            //else
-            //{
-            //    MessageBox.Show("Det finns inga bokningar");
-            //}
+
         }
 
         private void btn_saveFile_Click(object sender, RoutedEventArgs e)
         {
             saveToFile();
-            //SaveFileDialog dlg = new SaveFileDialog();
-            //dlg.Filter = "(*.txt) | *.txt";
 
-            //if (dlg.ShowDialog() == true)
-            //{
-            //    StreamWriter sw = new StreamWriter(dlg.FileName);
-
-            //    for (int i = 0; i < bokningsBox.Items.Count; i++)
-            //    {
-            //        sw.WriteLine(bokningsBox.Items[i].ToString());
-            //    }
-            //    sw.Close();
-            //}
         }
-
-        private void btn_readFile_Click(object sender, RoutedEventArgs e)
+        private async void btn_readFile_Click(object sender, RoutedEventArgs e)
         {
-            readFromFile();
-            //bokningsBox.Items.Clear();
-            //OpenFileDialog dlg = new OpenFileDialog();
-
-            //dlg.Filter = "Text Files(.txt) | *.txt";
-
-
-            //var result1 = dlg.ShowDialog();
-            //if (result1 == true)
-            //{
-            //    var lines = File.ReadAllLines(dlg.FileName);
-            //    foreach (var line in lines)
-            //    {
-            //        bokningsBox.Items.Add(line);
-            //    }
-            //}
+            await readFromFile();
         }
+
 
         public void bokaBord()
         {
@@ -156,6 +79,7 @@ namespace _2022_10_22_ITHS_Uppgift3
             bool tableAvailable = true;
             if (String.IsNullOrEmpty(datepick.Text.ToString()) || String.IsNullOrEmpty(tidCombo.Text.ToString()) || String.IsNullOrEmpty(nameBox.Text.ToString()) || String.IsNullOrEmpty(bordCombo.Text.ToString()))
             {
+                btn_boka.IsEnabled = false;
                 fieldMissing = true;
             }
 
@@ -176,6 +100,7 @@ namespace _2022_10_22_ITHS_Uppgift3
             }
             else
             {
+               
                 if (tableAvailable)
                 {
                     bokningar.Add(new Bokning(datepick.Text.ToString(), tidCombo.Text.ToString(), nameBox.Text.ToString(), Int32.Parse(bordCombo.Text)));
@@ -193,6 +118,8 @@ namespace _2022_10_22_ITHS_Uppgift3
                 }
             }
         }
+       
+
         public void avbokaBord()
         {
             if (bokningsBox.Items.Count > 0)
@@ -215,15 +142,15 @@ namespace _2022_10_22_ITHS_Uppgift3
             {
                 StreamWriter sw = new StreamWriter(dlg.FileName);
 
-                foreach(var bokning in bokningar)
+                foreach (var bokning in bokningar)
                 {
                     sw.WriteLine(bokning.datum + " " + bokning.tider + " " + bokning.table + " " + bokning.name);
                 }
-                
+
                 sw.Close();
             }
         }
-        public void readFromFile()
+        public async Task readFromFile()
         {
             bokningsBox.Items.Clear();
             OpenFileDialog dlg = new OpenFileDialog();
@@ -232,6 +159,9 @@ namespace _2022_10_22_ITHS_Uppgift3
 
 
             var result1 = dlg.ShowDialog();
+            bokningsBox.Items.Add("Hämtar bokningar från fil...");
+            await Task.Delay(2000);
+            bokningsBox.Items.Clear();
             if (result1 == true)
             {
                 var lines = File.ReadAllLines(dlg.FileName);
@@ -241,15 +171,19 @@ namespace _2022_10_22_ITHS_Uppgift3
                 }
             }
         }
-        public void visaAllaBokningar()
+        public async Task visaAllaBokningar()
         {
+            bokningsBox.Items.Clear();
+            bokningsBox.Items.Add("Hämtar bokningar...");
+            await Task.Delay(2000);
             bokningsBox.Items.Clear();
             bokningar.Aggregate("", (values, nextvalue) => values += bokningsBox.Items.Add
             ($"{bokningar.IndexOf(nextvalue) + 1}, {nextvalue.datum} {nextvalue.tider} {nextvalue.name}" +
             $" bord: {nextvalue.table}" + "\n"));
         }
-    }
 
+        
+    }
 }
 
 
