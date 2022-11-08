@@ -5,31 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_2022_10_22_ITHS_Uppgift3"
         mc:Ignorable="d"
-        Title="Servering" Height="550" Width="800">
+        Title="Servering" Height="600" Width="800">
     <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            
         </Grid.ColumnDefinitions>
-        <!--<Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>-->
-
+        
         <WrapPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-            <StackPanel Grid.Column="0" Margin="0,10,0,0" Width="300" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <Label Name="Loading" Height="40"></Label>
-                <ListBox Name="bokningsBox" Height="400" Margin="0,0,0,0"></ListBox>
-                <Button Name="btn_avboka" Content="Avboka" FontSize="20" Height="40" Width="100" HorizontalAlignment="Center"  Margin="0,15,0,0" Click="btn_avboka_Click">
+            <StackPanel Grid.Column="0" Margin="10,30,0,0" Width="300" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <Label Name="Loading" Height="30" Margin="0,0,0,20"></Label>
+                <ListBox Name="bokningsBox" Width="250" Height="350" Margin="0,40,0,0"></ListBox>
+                <Button Name="btn_cancelBook" Content="Avboka" FontSize="20" Height="40" Width="100" HorizontalAlignment="Center"  Margin="0,15,0,0" Click="btn_Cancel_Click">
                     <Button.Style>
                         <Style>
                             <Style.Triggers>
@@ -42,28 +32,28 @@
                         </Style>
                     </Button.Style>
                 </Button>
-
             </StackPanel>
         </WrapPanel>
 
         <StackPanel Grid.Column="1" Margin="10,0,10,10">
-            <TextBlock   Text ="Datum" FontSize="20" Margin="0,10,0,0"/>
-            <DatePicker Name="datepick"   Height="40" Width="200" FontSize="20" Margin="0,10,0,0"/>
-            <TextBlock   Text="Tid" FontSize="20" Margin="0,30,0,0"/>
-            <ComboBox Name="tidCombo"  Margin="0,10,0,0" Height="50" FontSize ="20" ItemsSource="{Binding tider}"/>
-            <Button Name="btn_boka" Content="Boka" FontSize="20" Height="40" Margin="0,60,0,0" Click="btn_boka_Click"/>
-            <Button Name = "btn_visaBokningar" Height="40" Content = "Visa bokningar" FontSize="20" Margin="0,30,0,0" Click="btn_visaBokningar_Click_1"/>
-            <Button Name ="btn_readFile" Content="Läs från fil" FontSize="20" Height="40"  Margin="0,50,0,0" Click="btn_readFile_Click"/>
+            <TextBlock Text ="Datum" FontSize="20" Margin="20,10,0,0"/>
+            <DatePicker Name="datePick" Width="200" FontSize="20" Margin="0,10,0,0"/>
+            <TextBlock Text="Tid" FontSize="20" Margin="0,30,0,0"/>
+            <ComboBox Name="timeCombo"  Margin="0,10,0,0" Height="50" FontSize ="20" ItemsSource="{Binding tider}"/>
+            <Button Name="btn_Book" Content="Boka" FontSize="20" Height="40" Margin="0,60,0,0" Click="btn_Book_Click"/>
+            <Button Name = "btn_ShowBookings" Height="40" Content = "Visa bokningar" FontSize="20" Margin="0,30,0,0" Click="btn_ShowBookings_Click"/>
+            <Button Name ="btn_ReadFile" Content="Läs från fil" FontSize="20" Height="40"  Margin="0,50,0,0" Click="btn_readFile_Click"/>
         </StackPanel>
 
-        <StackPanel Grid.Column="2"   Margin="20,0,0,0">
+        <StackPanel Grid.Column="2" Margin="20,0,0,0">
             <TextBlock Text ="Namn" FontSize="20" Margin="0,10,0,0"/>
-            <TextBox Name="nameBox" Width="150" FontSize="20" Margin="0,10,0,0" />
-            <TextBlock  Text="Bordsnummer" FontSize="20" Margin="0,40,0,0"/>
-            <ComboBox Name="bordCombo" Margin="0,10,0,0" Height="50" FontSize ="20" ItemsSource="{Binding bord}"/>
-            <Button Name="btn_saveFile" Content= "Spara till fil" FontSize="20" Height="40" Margin="0,220,0,0" Click="btn_saveFile_Click"/>
+            <TextBox Name="nameBox" FontSize="20" Margin="0,10,50,0" />
+            <TextBlock  Text="Bordsnummer" FontSize="20" Margin="0,35,0,0"/>
+            <ComboBox Name="tableCombo" Margin="0,10,20,0" Height="50" FontSize ="20" ItemsSource="{Binding bord}"/>
+            <Button Name="btn_Serializing" Content="SerialiseraJson" FontSize="20" Margin="0,60,20,0" Height="40" Click="Serializing_Click"/>
+            <Button Name="btn_Deserializing" Content="DeserialiseraJson" FontSize="20" Margin="0,30,20,0" Height="40" Click="btn_Deserializing_Click"/>
+            <Button Name="btn_saveFile" Content= "Spara till fil" FontSize="20" Height="40" Margin="0,50,20,0" Click="btn_saveFile_Click"/>
         </StackPanel>
-
     </Grid>
 </Window>
     
