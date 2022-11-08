@@ -49,8 +49,6 @@ namespace _2022_10_22_ITHS_Uppgift3
             bookings.Aggregate("", (values, nextvalue) => values += bokningsBox.Items.Add($"{bookings.IndexOf(nextvalue) + 1}, {nextvalue.date} {nextvalue.times} {nextvalue.name} bord: {nextvalue.table}" + "\n"));
             DataContext = this;
             bokningsBox.Items.Clear();
-
-
         }
 
         private async void btn_ShowBookings_Click(object sender, RoutedEventArgs e)
@@ -133,68 +131,96 @@ namespace _2022_10_22_ITHS_Uppgift3
 
         public void cancelBooking()
         {
-            if (bokningsBox.Items.Count > 0)
+            try
             {
-                int val = bokningsBox.SelectedIndex;
-                bookings.RemoveAt(val);
-                bokningsBox.Items.RemoveAt(bokningsBox.SelectedIndex);
+                if (bokningsBox.Items.Count > 0)
+                {
+                    int val = bokningsBox.SelectedIndex;
+                    bookings.RemoveAt(val);
+                    bokningsBox.Items.RemoveAt(bokningsBox.SelectedIndex);
+                }
+                else
+                {
+                    MessageBox.Show("Det finns inga bokningar");
+                }
             }
-            else
+            catch(Exception ex)
             {
-                MessageBox.Show("Det finns inga bokningar");
+                MessageBox.Show(ex.Message);
             }
         }
         public void saveToFile()
         {
-            SaveFileDialog dlg = new SaveFileDialog();
-            dlg.Filter = "(*.txt) | *.txt";
-
-            if (dlg.ShowDialog() == true)
+            try
             {
-                StreamWriter sw = new StreamWriter(dlg.FileName);
+                SaveFileDialog dlg = new SaveFileDialog();
+                dlg.Filter = "(*.txt) | *.txt";
 
-                foreach (var bokning in bookings)
+                if (dlg.ShowDialog() == true)
                 {
-                    sw.WriteLine(bokning.date + " " + bokning.times + " " + bokning.table + " " + bokning.name);
-                }
+                    StreamWriter sw = new StreamWriter(dlg.FileName);
 
-                sw.Close();
+                    foreach (var bokning in bookings)
+                    {
+                        sw.WriteLine(bokning.date + " " + bokning.times + " " + bokning.table + " " + bokning.name);
+                    }
+
+                    sw.Close();
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         public async Task readFromFile()
         {
-            bokningsBox.Items.Clear();
-            OpenFileDialog dlg = new OpenFileDialog();
-
-            dlg.Filter = "Text Files(*.txt) | *.txt";
-            var result1 = dlg.ShowDialog();
-            Loading.Content = "Laddar bokningar från fil...";
-            disableButtons();
-            await Task.Delay(2000);
-            enableButtons();
-            Loading.Content = "";
-            if (result1 == true)
+            try
             {
-                var lines = File.ReadAllLines(dlg.FileName);
-                foreach (var line in lines)
+                bokningsBox.Items.Clear();
+                OpenFileDialog dlg = new OpenFileDialog();
+
+                dlg.Filter = "Text Files(*.txt) | *.txt";
+                var result1 = dlg.ShowDialog();
+                Loading.Content = "Laddar bokningar från fil...";
+                disableButtons();
+                await Task.Delay(2000);
+                enableButtons();
+                Loading.Content = "";
+                if (result1 == true)
                 {
-                    bokningsBox.Items.Add(line);
+                    var lines = File.ReadAllLines(dlg.FileName);
+                    foreach (var line in lines)
+                    {
+                        bokningsBox.Items.Add(line);
+                    }
                 }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         public async Task showAllBookings()
         {
-            bokningsBox.Items.Clear();
-            Loading.Content = "Laddar bokningar...";
-            disableButtons();
+            try
+            {
+                bokningsBox.Items.Clear();
+                Loading.Content = "Laddar bokningar...";
+                disableButtons();
 
-            await Task.Delay(2000);
-            enableButtons();
+                await Task.Delay(2000);
+                enableButtons();
 
-            Loading.Content = "";
-            bookings.Aggregate("", (values, nextvalue) => values += bokningsBox.Items.Add
-            ($"{bookings.IndexOf(nextvalue) + 1}, {nextvalue.date} {nextvalue.times} {nextvalue.name}" +
-            $" bord: {nextvalue.table}" + "\n"));
+                Loading.Content = "";
+                bookings.Aggregate("", (values, nextvalue) => values += bokningsBox.Items.Add
+                ($"{bookings.IndexOf(nextvalue) + 1}, {nextvalue.date} {nextvalue.times} {nextvalue.name}" +
+                $" bord: {nextvalue.table}" + "\n"));
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         public void disableButtons()
         {
@@ -218,29 +244,42 @@ namespace _2022_10_22_ITHS_Uppgift3
         private async void Serializing_Click(object sender, RoutedEventArgs e)
         {
             string fileName = "Testing.json";
-            using FileStream createStream = File.Create(fileName);
-            await JsonSerializer.SerializeAsync(createStream, bookings);
-            
-            await createStream.DisposeAsync();
-            bokningsBox.Items.Clear();
-            MessageBox.Show("Bokningar serialiserade till Json-format till fil: " + fileName);
+            try
+            {
+                using FileStream createStream = File.Create(fileName);
+                await JsonSerializer.SerializeAsync(createStream, bookings);
 
-            //(File.ReadAllText(fileName));
+                await createStream.DisposeAsync();
+                bokningsBox.Items.Clear();
+                MessageBox.Show("Bokningar serialiserade till Json-format till fil: " + fileName);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            
         }
 
         private void btn_Deserializing_Click(object sender, RoutedEventArgs e)
         {
             string fileName = "Testing.json";
             bokningsBox.Items.Clear();
-            string jsonString = File.ReadAllText(fileName);
-            List<Booking> temporary = JsonSerializer.Deserialize<List<Booking>>(jsonString)!;
-            
-
-            bookings = temporary;
-
-            foreach (Booking book in bookings)
+            try
             {
-                bokningsBox.Items.Add($"{book.date} {book.times} {book.table} {book.name}");
+                string jsonString = File.ReadAllText(fileName);
+                List<Booking> temporary = JsonSerializer.Deserialize<List<Booking>>(jsonString)!;
+
+
+                bookings = temporary;
+
+                foreach (Booking book in bookings)
+                {
+                    bokningsBox.Items.Add($"{book.date} {book.times} {book.table} {book.name}");
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
 
 
